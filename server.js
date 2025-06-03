@@ -64,3 +64,31 @@ app.post('/api/checkout', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
+
+const express = require('express');
+const cors = require('cors');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// ✅ Dummy root route for testing
+app.get('/', (req, res) => {
+  res.send('Backend is running.');
+});
+
+// ✅ Your checkout route
+app.post('/api/checkout', (req, res) => {
+  const { name, email, phone, product, price, method } = req.body;
+
+  if (!name || !email || !phone || !product || !price || !method) {
+    return res.status(400).json({ error: 'Missing fields' });
+  }
+
+  // For now, send dummy URL
+  res.json({ url: 'https://example.com/payment?success=true' });
+});
+
+// ✅ Listen
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
