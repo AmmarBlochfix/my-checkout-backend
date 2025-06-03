@@ -18,8 +18,8 @@ async function sendEmail(name, email, phone, product, method) {
   let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.quickfixguadget@gmail.com,
-      pass: process.env.tvtd cubn qcgb vzdi,
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 
@@ -74,4 +74,3 @@ app.post('/api/checkout', async (req, res) => {
 // ✅ Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-
