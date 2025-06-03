@@ -50,8 +50,23 @@ app.post('/api/checkout', async (req, res) => {
       return res.json({ url: response.data.invoice_url });
 
     } else if (method === 'card') {
-      const gardarianUrl = `https://widget.gardarian.com/payment?amount=${price}&fiat_type=usd&crypto=btc&email=${encodeURIComponent(email)}`;
-      return res.json({ url: gardarianUrl });
+      // Updated part: use NowPayments API for card payments
+      const response = await axios.post('https://api.nowpayments.io/v1/invoice', {
+        price_amount: price,
+        price_currency: 'usd',
+        pay_currency: 'usd',  // fiat currency triggers card payment option
+        order_id: product,
+        order_description: `Order for ${product}`,
+        success_url: 'https://yourdomain.com/success.html',
+        cancel_url: 'https://yourdomain.com/cancel.html'
+      }, {
+        headers: {
+          'x-api-key': process.env.NOWPAYMENTS_API_KEY,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      return res.json({ url: response.data.invoice_url });
     }
 
     res.status(400).json({ error: 'Invalid method' });
